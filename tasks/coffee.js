@@ -19,7 +19,8 @@ module.exports = function(grunt) {
       join: false,
       sourceMap: false,
       joinExt: '.src.coffee',
-      separator: grunt.util.linefeed
+      separator: grunt.util.linefeed,
+      banner: ''
     });
 
     options.separator = grunt.util.normalizelf(options.separator);
@@ -33,9 +34,9 @@ module.exports = function(grunt) {
         var fileOptions = _.extend({ sourceMapDir: paths.destDir }, options);
         writeFileAndMap(paths, compileWithMaps(validFiles, fileOptions, paths), fileOptions);
       } else if (options.join === true) {
-        writeFile(f.dest, concatInput(validFiles, options));
+        writeCompiledFile(f.dest, options.banner + concatInput(validFiles, options));
       } else {
-        writeFile(f.dest, concatOutput(validFiles, options));
+        writeCompiledFile(f.dest, options.banner + concatOutput(validFiles, options));
       }
     });
   });
@@ -208,7 +209,7 @@ module.exports = function(grunt) {
       return;
     }
 
-    writeCompiledFile(paths.dest, output.js);
+    writeCompiledFile(paths.dest, options.banner + output.js);
     options.sourceMapDir = appendTrailingSlash(options.sourceMapDir);
     writeSourceMapFile(options.sourceMapDir + paths.mapFileName, output.v3SourceMap);
   };
